@@ -7,7 +7,7 @@ ContourGroup::ContourGroup(CvSeq *seq, CvSize sz )
 
   maskTemp = cvCreateImage( sz, 8, 1 );
   cvZero( maskTemp );
-	
+
   cvDrawContours( maskTemp, contour, CVX_WHITE, CVX_WHITE, -1, CV_FILLED, 8 );
   CvMoments moments;
   cvMoments( maskTemp, &moments, 1);
@@ -28,7 +28,7 @@ ContourGroup::ContourGroup(CvSeq *seq, CvSize sz )
   for( int i = 0; i < 4; i++ )
   {
     bpts[i].x = temp_bpts[4].x;
-	bpts[i].y = temp_bpts[4].y;
+	  bpts[i].y = temp_bpts[4].y;
   }
   cvClearMemStorage( area_mem );
   cvReleaseMemStorage( &area_mem );

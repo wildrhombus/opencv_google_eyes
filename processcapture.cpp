@@ -1,3 +1,5 @@
+//  Code to process the video capture and to provide the tracking information.
+
 #include "stdafx.h"
 #include "google_two.h"
 
@@ -52,7 +54,7 @@ void ProcessCapture::init( IplImage* frame )
   cvCvtColor( frame, hsv, CV_BGR2HSV );
   cvConvertImage( frame, grey, 0 );
  // cvSet( frame, cvScalarAll( 100 ) );
- 
+
   prev_direction = direction;
   prev_avgx = avgx;
   prev_avgxm = avgxm;
@@ -60,16 +62,16 @@ void ProcessCapture::init( IplImage* frame )
   prev_trackx = trackx;
   prev_num_contours = contours.size();
   group_count = 0;
-	  
+
   while (!contours.empty()) {
-    delete contours.back();  
+    delete contours.back();
     contours.pop_back();
   }
   contours.clear();
   if( mem_storage != NULL )
   {
     cvClearMemStorage( mem_storage );
-	cvReleaseMemStorage( &mem_storage );
+	  cvReleaseMemStorage( &mem_storage );
   }
 
   for(GMIter giter = groups.begin(); giter != groups.end(); ++giter)
@@ -89,8 +91,8 @@ int ProcessCapture::find_contours( IplImage* frame )
   cvMorphologyEx( dst, dst1, 0, 0, CV_MOP_OPEN, CVCLOSE_ITR );
   cvMorphologyEx( dst1, dst, 0, 0, CV_MOP_CLOSE, CVCLOSE_ITR );
 
-  mem_storage = cvCreateMemStorage( 700000 ); 
-      
+  mem_storage = cvCreateMemStorage( 700000 );
+
   double len, q;
   scanner = cvStartFindContours( dst, mem_storage, sizeof( CvContour ), CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
   while( (cc=cvFindNextContour( scanner )) != NULL )
@@ -105,14 +107,14 @@ int ProcessCapture::find_contours( IplImage* frame )
     }
   }
   found_contours = cvEndFindContours( &scanner );
-		
+
   int i;
   for(i = 0, cc = found_contours; cc != NULL; cc = cc->h_next,i++ )
   {
     ContourGroup* group = new ContourGroup( cc, sz );
     contours.push_back( group );
   }
-   	 
+
   return contours.size();
 }
 

@@ -1,8 +1,7 @@
 //
 //  DynMessage.cpp
 //
-//  Created by Adam on 12-07-30.
-//  Copyright (c) 2012 Aesthetec. All rights reserved.
+//  Helpers for Dynamixel motor control
 
 //#pragma once
 

@@ -94,7 +94,7 @@ int main( int argc, char** argv )
 	int ccount = 0;
 	char timebuf[26];
 	time_t rawtime;
-   struct tm timeinfo;
+  struct tm timeinfo;
 
 //	CvCapture* capture = cvCreateFileCapture( "Movie.avi" );  // Use a movie instead of the camera
 	CvCapture* capture = cvCreateCameraCapture( 0 );

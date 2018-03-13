@@ -13,7 +13,7 @@ unsigned __stdcall capture_track::ThreadStaticEntryPoint(void * pThis)
   capture_track * pthctrack = (capture_track*)pThis;   // the tricky cast
   pthctrack->StartUp();           // now call the true entry-point-function
 
-  return 1;   
+  return 1;
 }
 
 void capture_track::StartUp()
@@ -25,7 +25,7 @@ void capture_track::StartUp()
 		printf( "no capture\n" );
 		return;
 	}
-    
+
 	first = cvQueryFrame( capture );
     sz = cvGetSize( first );
 

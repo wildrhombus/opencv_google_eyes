@@ -1,3 +1,5 @@
+/* Utilties for image processing */
+
 #include "stdafx.h"
 #include "google_two.h"
 
@@ -43,7 +45,7 @@ uchar CodeBook::background_diff( uchar* p, int pixelCount )
     if( matchChannel == CHANNELS ) break;
   }
   if( i >= numEntries ) return(255);
-	  
+
   return(0);
 }
 
