@@ -39,43 +39,43 @@ void setVelocity( int servo, double state );
 void setPosition( int servo, int state );
 
 typedef struct motor_msgs {
-	vector<unsigned __int8> setPositionRight;
-	vector<unsigned __int8> setPositionLeft;
-	vector<unsigned __int8> setPositionZero;
-	vector<unsigned __int8> setEnableON;
-	vector<unsigned __int8> setEnableOFF;
-	vector<unsigned __int8> getSpeed;
-	vector<unsigned __int8> getPosition;
-	vector<unsigned __int8> getEnable;
-	vector<unsigned __int8> getMoving;
-	vector<unsigned __int8> setStatus;
-	vector<unsigned __int8> setReturnDelay;
-	vector<unsigned __int8> setCWLimit;
-	vector<unsigned __int8> setCCWLimit;
-	vector<unsigned __int8> setCW_CM_msg;
-	vector<unsigned __int8> setCCW_CM_msg;
-	vector<unsigned __int8> setCW_Slope_msg;
-	vector<unsigned __int8> setCCW_Slope_msg;
-	vector<unsigned __int8> getCW_CM_msg;
-	vector<unsigned __int8> getCCW_CM_msg;
-	vector<unsigned __int8> getCW_Slope_msg;
-	vector<unsigned __int8> getCCW_Slope_msg;
-	vector<unsigned __int8> getPunch_msg;
+  vector<unsigned __int8> setPositionRight;
+  vector<unsigned __int8> setPositionLeft;
+  vector<unsigned __int8> setPositionZero;
+  vector<unsigned __int8> setEnableON;
+  vector<unsigned __int8> setEnableOFF;
+  vector<unsigned __int8> getSpeed;
+  vector<unsigned __int8> getPosition;
+  vector<unsigned __int8> getEnable;
+  vector<unsigned __int8> getMoving;
+  vector<unsigned __int8> setStatus;
+  vector<unsigned __int8> setReturnDelay;
+  vector<unsigned __int8> setCWLimit;
+  vector<unsigned __int8> setCCWLimit;
+  vector<unsigned __int8> setCW_CM_msg;
+  vector<unsigned __int8> setCCW_CM_msg;
+  vector<unsigned __int8> setCW_Slope_msg;
+  vector<unsigned __int8> setCCW_Slope_msg;
+  vector<unsigned __int8> getCW_CM_msg;
+  vector<unsigned __int8> getCCW_CM_msg;
+  vector<unsigned __int8> getCW_Slope_msg;
+  vector<unsigned __int8> getCCW_Slope_msg;
+  vector<unsigned __int8> getPunch_msg;
 } motorMsgs;
 
 typedef struct eye_info {
-	unsigned __int8 motor_id;
-	int dir;
-	double x;
-	double speed;
-	double smooth_speed;
-	unsigned __int16 minVel;
-	unsigned __int16 maxVel;
-	unsigned __int16 zero_pos;
-	unsigned __int16 right_pos;
-	unsigned __int16 left_pos;
-	double cur_x;
-	double future_x;
+  unsigned __int8 motor_id;
+  int dir;
+  double x;
+  double speed;
+  double smooth_speed;
+  unsigned __int16 minVel;
+  unsigned __int16 maxVel;
+  unsigned __int16 zero_pos;
+  unsigned __int16 right_pos;
+  unsigned __int16 left_pos;
+  double cur_x;
+  double future_x;
 } eyeInfo;
 
 class Track
@@ -138,14 +138,14 @@ public:
 class eyes
 {
 private:
-	Track* track;
+  Track* track;
 
 public:
-	eyes( Track* );
-	static unsigned __stdcall ThreadStaticEntryPoint(void * pThis);
+  eyes( Track* );
+  static unsigned __stdcall ThreadStaticEntryPoint(void * pThis);
     void StartUp();
-	void DieDieDie();
-	virtual ~eyes(void);
+  void DieDieDie();
+  virtual ~eyes(void);
 };
 
 

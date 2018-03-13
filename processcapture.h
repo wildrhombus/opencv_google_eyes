@@ -23,7 +23,7 @@ using namespace std;
 class ContourGroup 
 {
 private:
-	IplImage* maskTemp;
+  IplImage* maskTemp;
 public:
   CvSeq* contour;
   int centerx;
@@ -78,10 +78,10 @@ public:
 class TrackGroup {
 public:
     int lowmagcount;
-	string group_id;
+  string group_id;
 
-	TrackGroup() { lowmagcount = 0; group_id = ""; }
-	virtual ~TrackGroup() {}
+  TrackGroup() { lowmagcount = 0; group_id = ""; }
+  virtual ~TrackGroup() {}
 };
 
 typedef map<string, PointGroup*> GroupMap;
@@ -94,54 +94,54 @@ typedef PointVector::iterator PVIter;
 class ProcessCapture
 {
 private:
-	IplImage* maskTemp;
-	IplImage* eig_image;
-	IplImage* tmp_image;
-	IplImage* pyramid;
-	IplImage* prev_pyramid;
-	IplImage* swap_temp;
-	IplImage* dst1;
-	CvSize sz;
+  IplImage* maskTemp;
+  IplImage* eig_image;
+  IplImage* tmp_image;
+  IplImage* pyramid;
+  IplImage* prev_pyramid;
+  IplImage* swap_temp;
+  IplImage* dst1;
+  CvSize sz;
     CvPoint2D32f pointlist1[MAX_CORNERS];
     CvPoint2D32f pointlist2[MAX_CORNERS];
-	float prev_direction;
+  float prev_direction;
     float avgx, prev_avgx;
     float avgxm, prev_avgxm;
-	float edge, prev_edge;
-	long corner_count;
-	CvMemStorage* mem_storage; 
-	int group_count;
-	Track *eyes;
+  float edge, prev_edge;
+  long corner_count;
+  CvMemStorage* mem_storage; 
+  int group_count;
+  Track *eyes;
 
 public:
-	IplImage* cb_mask;
-	IplImage* dst;
-	IplImage* image;
+  IplImage* cb_mask;
+  IplImage* dst;
+  IplImage* image;
     IplImage* hsv;
-	IplImage* track;
-	IplImage* grey;
-	IplImage* prev_grey;
-	GroupMap groups;
-	CvPoint2D32f *points[2], *swap_points;
+  IplImage* track;
+  IplImage* grey;
+  IplImage* prev_grey;
+  GroupMap groups;
+  CvPoint2D32f *points[2], *swap_points;
     PointVector pts;
-	ContourVector contours;
-	string dominant_group;
-	float prev_trackx;
+  ContourVector contours;
+  string dominant_group;
+  float prev_trackx;
     int prev_num_contours;
-	float direction;
-	float trackx;
-	int trackwidth;
-	long lowmagcount;
-	int endblob;
-	int edge_completed;
+  float direction;
+  float trackx;
+  int trackwidth;
+  long lowmagcount;
+  int endblob;
+  int edge_completed;
 
-	ProcessCapture( CvSize cap_size, Track *track_eyes );
+  ProcessCapture( CvSize cap_size, Track *track_eyes );
     void init( IplImage* frame );
     int find_contours( IplImage* frame );
     int get_groups( IplImage* frame );
-	void find_eye_position( IplImage* frame );
-	void find_first();
-	void get_points( IplImage *frame );
-	virtual ~ProcessCapture();
+  void find_eye_position( IplImage* frame );
+  void find_first();
+  void get_points( IplImage *frame );
+  virtual ~ProcessCapture();
 };
 

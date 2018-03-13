@@ -28,7 +28,7 @@ ContourGroup::ContourGroup(CvSeq *seq, CvSize sz )
   for( int i = 0; i < 4; i++ )
   {
     bpts[i].x = temp_bpts[4].x;
-	  bpts[i].y = temp_bpts[4].y;
+    bpts[i].y = temp_bpts[4].y;
   }
   cvClearMemStorage( area_mem );
   cvReleaseMemStorage( &area_mem );

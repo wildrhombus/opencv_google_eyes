@@ -23,9 +23,9 @@ typedef struct ce {
 } code_element;
 
 typedef struct codeBook {
-	code_element **cb;
-	int numEntries;
-	int t;
+  code_element **cb;
+  int numEntries;
+  int t;
 } code_book;
 
 
@@ -33,24 +33,24 @@ typedef struct codeBook {
 class CodeBook
 {
 private:
-	int numPixels;
-	unsigned int cbBounds[CHANNELS];
+  int numPixels;
+  unsigned int cbBounds[CHANNELS];
     int minMod[CHANNELS];
     int maxMod[CHANNELS];
 
-	uchar background_diff( uchar* p, int pixelCount );
-	int clear_stale_entries( int pixelCount );
+  uchar background_diff( uchar* p, int pixelCount );
+  int clear_stale_entries( int pixelCount );
 
 public:
-	code_book cbs[MAXPIXELS];
-	CodeBook( CvSize sz );
-	int update_codebook( uchar* p, int pixelCount );
+  code_book cbs[MAXPIXELS];
+  CodeBook( CvSize sz );
+  int update_codebook( uchar* p, int pixelCount );
     void update_codebooks( IplImage* hsv );
     void update_codebooks_mask( IplImage* hsv, IplImage* mask );
     void background_diffs( IplImage* hsv, IplImage* dst );
-	void clear_all_stale_entries();
-	int check_light_level( IplImage* );
-	void write_to_disk();
-	void read_from_disk();
-	virtual ~CodeBook();
+  void clear_all_stale_entries();
+  int check_light_level( IplImage* );
+  void write_to_disk();
+  void read_from_disk();
+  virtual ~CodeBook();
 };

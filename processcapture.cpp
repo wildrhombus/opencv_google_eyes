@@ -71,13 +71,13 @@ void ProcessCapture::init( IplImage* frame )
   if( mem_storage != NULL )
   {
     cvClearMemStorage( mem_storage );
-	  cvReleaseMemStorage( &mem_storage );
+    cvReleaseMemStorage( &mem_storage );
   }
 
   for(GMIter giter = groups.begin(); giter != groups.end(); ++giter)
   {
     PointGroup* group = (*giter).second;
-	delete group;
+  delete group;
   }
   groups.clear();
 }
@@ -150,47 +150,47 @@ int ProcessCapture::get_groups( IplImage* frame )
 #ifdef SHOWIMAGE
     cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 255, 255, 255, 0 ), -1, 8 );
 #endif
-	//   if( piter == pts.end() ) break;d
-	if( !status[i] || (*piter)->lowmagcount >= 5 )
-	{
+  //   if( piter == pts.end() ) break;d
+  if( !status[i] || (*piter)->lowmagcount >= 5 )
+  {
       piter = pts.erase(piter);
-	  cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
-	  continue;
+    cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
+    continue;
     }
-	if( contours.size() == 0 )
-	{
-	  cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
-	  piter = pts.erase(piter);
-	  continue;
-	}
+  if( contours.size() == 0 )
+  {
+    cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
+    piter = pts.erase(piter);
+    continue;
+  }
  
     CvSeq* cc;
-	pos_group = -1;
+  pos_group = -1;
     for(ci = 0; ci < contours.size(); ci++)
-	{
+  {
       cc = contours[ci]->contour;
 
 #ifdef SHOWIMAGE
       cvDrawContours( frame, cc, CVX_WHITE, CVX_WHITE, 1, 1, 8 );
 #endif
       double dist = cvPointPolygonTest( cc, points[1][i], 1 );
-	  if( dist >= 0.0 )
-	  {
+    if( dist >= 0.0 )
+    {
         contours[ci]->points_count++;
-		if( direction == 1 ) xdist = cvRound(contours[ci]->bbx2 - x1);
+    if( direction == 1 ) xdist = cvRound(contours[ci]->bbx2 - x1);
         else xdist = cvRound(x1 - contours[ci]->bbx);
 
         if( xdist < 200 ) pos_group = 0;
-	    else if( xdist < 400 ) pos_group = 1;
-	    else pos_group = 2;
+      else if( xdist < 400 ) pos_group = 1;
+      else pos_group = 2;
         break;
       }
-	}	
-	if( pos_group == -1 )
-	{
-	  piter = pts.erase(piter);
-	  cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
-	  continue;
+  } 
+  if( pos_group == -1 )
+  {
+    piter = pts.erase(piter);
+    cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
+    continue;
     }
 
     x0 = points[0][i].x;
@@ -201,12 +201,12 @@ int ProcessCapture::get_groups( IplImage* frame )
     magnitude = sqrt(pow( (x1 - x0), 2 ) + pow( (y1 - y0), 2 ) );
     angle = atan2((y1 - y0),(x1 - x0)) * 180 / PI;
     xlength = fabs( (float)(x1 - x0) );
-	if( magnitude < 10.0 )
-	{
-	  lowmagcount++;
-	  (*piter)->lowmagcount++;
-	  contours[ci]->lowmagcount++;
-	}
+  if( magnitude < 10.0 )
+  {
+    lowmagcount++;
+    (*piter)->lowmagcount++;
+    contours[ci]->lowmagcount++;
+  }
 
     angle_group = -1;
     if( angle >= -45.0 && angle < 45.0 ) angle_group = 0;
@@ -220,21 +220,21 @@ int ProcessCapture::get_groups( IplImage* frame )
     else if( magnitude >= 100 && magnitude < 200 ) mag_group = 2;
     else if( magnitude >= 200 && magnitude < 500 ) mag_group = 3;
     else mag_group = 4;
-		
-	group_id.str("");
-	group_id << ci << angle_group << mag_group << pos_group;
+    
+  group_id.str("");
+  group_id << ci << angle_group << mag_group << pos_group;
 
-	gid = group_id.str();
-	if( !groups[gid] )
-	{
-	  group = new PointGroup();
-	  groups[group_id.str()] = group;
-	}
+  gid = group_id.str();
+  if( !groups[gid] )
+  {
+    group = new PointGroup();
+    groups[group_id.str()] = group;
+  }
     groups[group_id.str()]->count++; 
     
-	group = groups[gid];
-	count = group->count;
-	group->contour_group = ci;
+  group = groups[gid];
+  count = group->count;
+  group->contour_group = ci;
     group->avg_angle = (group->avg_angle*(count-1) + fabs( angle ))/count;
     group->avg_mag = (group->avg_mag*(count-1) + magnitude)/count;
     group->avgx = (group->avgx*(count-1) + x1)/count;
@@ -243,22 +243,22 @@ int ProcessCapture::get_groups( IplImage* frame )
     if( x1 > group->maxx ) group->maxx = x1;
     if( x1 < group->minx ) group->minx = x1;
     group_count++;
-	(*piter)->group_id = gid;
+  (*piter)->group_id = gid;
     piter++;
 
     points[1][k] = points[1][i];
     points[0][k] = points[0][i];
-	k++;
+  k++;
   }
   corner_count = k;
 //  printf("lowmagcount %ld cornercount %ld\n", lowmagcount, corner_count);
   if( lowmagcount == corner_count )
   {
-	for(ci = 0; ci < contours.size(); ci++)
-	{
+  for(ci = 0; ci < contours.size(); ci++)
+  {
       if(contours[ci]->lowmagcount == contours[ci]->points_count )
-		cvDrawContours( cb_mask, contours[ci]->contour, CVX_WHITE, CVX_WHITE, -1, CV_FILLED, 8 );
-	}
+    cvDrawContours( cb_mask, contours[ci]->contour, CVX_WHITE, CVX_WHITE, -1, CV_FILLED, 8 );
+  }
     while (!contours.empty()) {
       delete contours.back();  
       contours.pop_back();
@@ -274,7 +274,7 @@ int ProcessCapture::get_groups( IplImage* frame )
   }
   return groups.size();
 }
-	  
+    
 void ProcessCapture::find_eye_position( IplImage* frame )
 {
 #ifdef DEBUG
@@ -282,7 +282,7 @@ void ProcessCapture::find_eye_position( IplImage* frame )
 #endif
   if( prev_num_contours == 0 && contours.size() != 0 ) return find_first();
   if( groups.size() == 0 )
-	  return;
+    return;
   
   string groupfm = "";
   string groupfm2 = "";
@@ -306,89 +306,89 @@ void ProcessCapture::find_eye_position( IplImage* frame )
   {
     groupid = (*g).first;
     group = (*g).second;
-	perc_count = (group->count*1.0/group_count*1.0)*100.0;
-	if( perc_count < 5 ) continue;
-	
-	if( group->avg_angle <= 90.0 ) group->direction = 1.0;
+  perc_count = (group->count*1.0/group_count*1.0)*100.0;
+  if( perc_count < 5 ) continue;
+  
+  if( group->avg_angle <= 90.0 ) group->direction = 1.0;
     else group->direction = -1.0;
-	group->avgxm *= group->direction;
+  group->avgxm *= group->direction;
 
     group->trackx = (prev_avgxm + prev_avgx + group->avgx)/2;
          
     if( maxcount < group->count )
-	{
-	  maxcount = group->count;
-	  highcount = groupid;
+  {
+    maxcount = group->count;
+    highcount = groupid;
     }
-	trackMatch = (group->trackx - prev_trackx) * prev_direction;
+  trackMatch = (group->trackx - prev_trackx) * prev_direction;
     trackMatch2 = (group->avgx - prev_trackx) * prev_direction;
-		
-	if( (trackMatch >= -0.0) && (group->count > maxtmcount ) )
-	{
-	  maxtmcount = group->count;
-	  groupfm = groupid;
-	}
+    
+  if( (trackMatch >= -0.0) && (group->count > maxtmcount ) )
+  {
+    maxtmcount = group->count;
+    groupfm = groupid;
+  }
 
-	if( (trackMatch2 >= -0.0) && (group->count > maxtmcount ) )
-	{
-	  maxtm2count = group->count;
-	  groupfm2 = groupid;
-	}
+  if( (trackMatch2 >= -0.0) && (group->count > maxtmcount ) )
+  {
+    maxtm2count = group->count;
+    groupfm2 = groupid;
+  }
 
     if( (mindiff > fabs( prev_trackx - group->trackx )) && (group->count > maxmdcount) )
     {
       mindiff = fabs( prev_trackx - group->trackx);
-	  maxmdcount = group->count;
+    maxmdcount = group->count;
       groupmd = groupid;
     }
-	gi++;
+  gi++;
   }
   if( gi != 0 )
   {
     dominant_group = "";
-	if( maxtmcount > maxtm2count )
-	{
+  if( maxtmcount > maxtm2count )
+  {
       dominant_group = groupfm;
-	  trackx = groups[groupfm]->trackx;
-	}
-	else if ( maxtm2count != 0 )
-	{
+    trackx = groups[groupfm]->trackx;
+  }
+  else if ( maxtm2count != 0 )
+  {
       dominant_group = groupfm2;
       trackx = groups[groupfm2]->avgx;
-	}
-	else
-	{
-	  if( prev_edge )
+  }
+  else
+  {
+    if( prev_edge )
       {
-  	    dominant_group = groups.begin()->first;
-		trackx = groups[dominant_group]->avgx;
+        dominant_group = groups.begin()->first;
+    trackx = groups[dominant_group]->avgx;
       }
       else if( groups.begin()->second->direction != prev_direction )
       {
-	    if( groupmd != "" )
-		{
-		  dominant_group = groupmd;
+      if( groupmd != "" )
+    {
+      dominant_group = groupmd;
           trackx = groups[groupmd]->trackx;
-		}
-	    else
-		{
-		  dominant_group = highcount;
+    }
+      else
+    {
+      dominant_group = highcount;
           trackx = groups[highcount]->trackx;
-		}
+    }
       }
       else 
       {
-	    dominant_group = groups.begin()->first;
-		trackx = prev_trackx;
+      dominant_group = groups.begin()->first;
+    trackx = prev_trackx;
       }
-	}
+  }
   }
   else 
   {
     dominant_group = groups.begin()->first;
-	trackx = prev_trackx;
+  trackx = prev_trackx;
   }
-	 
+   
   direction = groups[dominant_group]->direction;
   avgx = groups[dominant_group]->avgx;
   avgxm = groups[dominant_group]->avgxm;
@@ -413,52 +413,52 @@ void ProcessCapture::find_eye_position( IplImage* frame )
   for( PVIter piter = pts.begin(); piter != pts.end(); ++piter )
   {
     if( (*piter)->group_id == "" )
-	{
+  {
       cvCircle( cb_mask, cvPointFrom32f( points[1][i] ), 10, cvScalarAll( 255 ), -1, 8 );
 #ifdef SHOWIMAGE
-	  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 127, 127, 127, 0 ), -1, 8 );
+    cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 127, 127, 127, 0 ), -1, 8 );
       cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 127, 127, 127, 0 ), 1, 8 );
 #endif
-	}
+  }
 #ifdef SHOWIMAGE
-	else
-	{
+  else
+  {
       if( (*piter)->group_id == dominant_group )
       {
-	    cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 0, 0, 0 ), -1, 8 );
-		cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 0, 0, 0 ), 1, 8 );
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 0, 0, 0 ), -1, 8 );
+    cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 0, 0, 0 ), 1, 8 );
       }
-	  else
-	  {
-	    if( (*piter)->group_id == groupfm )
-		{
-		  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 0, 255, 0 ), -1, 8 );
-		  cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 0, 255, 0 ), 1, 8 );
-		}
-		else if( (*piter)->group_id == groupfm2 )
-		{
-		  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 255, 0, 0 ), -1, 8 );
-		  cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 255, 0, 0 ), 1, 8 );
-		}
-		else if( (*piter)->group_id == groupmd )
-		{
-		  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 255, 0, 0, 0 ), -1, 8 );
-		  cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 255, 0, 0, 0 ), 1, 8 );
-		}
-		else if( (*piter)->group_id == highcount )
-		{
-		  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 255, 255, 0 ), -1, 8 );
-		  cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 255, 255, 0 ), 1, 8 );
-		}
-		else
-		{
-		  cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 255, 0, 255, 0 ), -1, 8 );
-		  cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 255, 0, 255, 0 ), 1, 8 );
-	    }
+    else
+    {
+      if( (*piter)->group_id == groupfm )
+    {
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 0, 255, 0 ), -1, 8 );
+      cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 0, 255, 0 ), 1, 8 );
+    }
+    else if( (*piter)->group_id == groupfm2 )
+    {
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 255, 0, 0 ), -1, 8 );
+      cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 255, 0, 0 ), 1, 8 );
+    }
+    else if( (*piter)->group_id == groupmd )
+    {
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 255, 0, 0, 0 ), -1, 8 );
+      cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 255, 0, 0, 0 ), 1, 8 );
+    }
+    else if( (*piter)->group_id == highcount )
+    {
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 0, 255, 255, 0 ), -1, 8 );
+      cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 0, 255, 255, 0 ), 1, 8 );
+    }
+    else
+    {
+      cvCircle( frame, cvPointFrom32f( points[1][i] ), 3, cvScalar( 255, 0, 255, 0 ), -1, 8 );
+      cvLine( frame, cvPointFrom32f( points[0][i] ), cvPointFrom32f( points[1][i] ), cvScalar( 255, 0, 255, 0 ), 1, 8 );
       }
-	}
+      }
+  }
 #endif
-	i++;
+  i++;
   }
 }
 
@@ -496,37 +496,37 @@ void ProcessCapture::find_first()
     avgx = 0;
     trackx = 0;
     direction = 1;
-	edge_completed = FALSE;
+  edge_completed = FALSE;
   }
   else if( bbx2 > (trackwidth - 70) && edge_completed )
   {
 #ifdef DEBUG
     printf( " R " );
 #endif
-	eyes->setAction( FARRIGHT );
+  eyes->setAction( FARRIGHT );
     avgx = trackwidth*1.0;
     trackx = trackwidth*1.0;
     direction = -1.0;
-	edge_completed = FALSE;
+  edge_completed = FALSE;
   }
   else if( ( bby < 70 || bby2 > 460 ) && edge_completed )
   {
 #ifdef DEBUG
     printf( " Y " );
 #endif
-  	if ( direction == 1 ) eyes->setMove( 0, RIGHT, centerx ); 
+    if ( direction == 1 ) eyes->setMove( 0, RIGHT, centerx ); 
     else eyes->setMove( 0, LEFT, centerx );
     avgx = centerx*1.0;
     trackx = centerx*1.0;
     direction = 1;
-	edge_completed = FALSE;
+  edge_completed = FALSE;
   } 
   else if( !edge_completed || endblob ) 
   {
 #ifdef DEBUG
     printf( " M " );
 #endif
-  	if ( direction == 1 ) eyes->setMove( 0, RIGHT, centerx ); 
+    if ( direction == 1 ) eyes->setMove( 0, RIGHT, centerx ); 
     else eyes->setMove( 0, LEFT, centerx );
     avgx = centerx*1.0;
     trackx = centerx*1.0;
@@ -536,19 +536,19 @@ void ProcessCapture::find_first()
   else
   {
 #ifdef DEBUG
-//	printf(" ignore contour\n");
+//  printf(" ignore contour\n");
 #endif
-	while (!contours.empty()) {
+  while (!contours.empty()) {
       delete contours.back();  
       contours.pop_back();
     }
     contours.clear();
 
- 	for(GMIter giter = groups.begin(); giter != groups.end(); ++giter)
-	{
+  for(GMIter giter = groups.begin(); giter != groups.end(); ++giter)
+  {
       PointGroup* group = (*giter).second;
       delete group;
-	}
+  }
     groups.clear();
   }
 }
@@ -583,7 +583,7 @@ void ProcessCapture::get_points( IplImage *frame )
     }
     if( i != corner_count ) continue;
 
-	TrackGroup* pnt;
+  TrackGroup* pnt;
     if( corner_count3 < MAX_CORNERS)
     {
       pnt = new TrackGroup();
@@ -612,14 +612,14 @@ ProcessCapture::~ProcessCapture()
   contours.clear();
   if( mem_storage != NULL )
   {
-	cvClearMemStorage( mem_storage );
-	cvReleaseMemStorage( &mem_storage );
+  cvClearMemStorage( mem_storage );
+  cvReleaseMemStorage( &mem_storage );
   }
 
   for(GMIter giter = groups.begin(); giter != groups.end(); ++giter)
   {
     PointGroup* group = (*giter).second;
-	delete group;
+  delete group;
   }
   groups.clear();
 

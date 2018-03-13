@@ -79,7 +79,7 @@ int CodeBook::clear_stale_entries( int pixelCount )
         foo[k]->t_last_update = 0;
         k++;
       }
-	  else delete book->cb[ii];
+    else delete book->cb[ii];
     }
     delete [] keep;
     delete [] book->cb;
@@ -174,7 +174,7 @@ int CodeBook::update_codebook( uchar* p, int pixelCount )
 
   for( n=0; n < CHANNELS; n++ )
   {
-	element = book->cb[i];
+  element = book->cb[i];
     if(element->learnHigh[n] < high[n]) element->learnHigh[n] += 1;
     if(element->learnLow[n] > low[n]) element->learnLow[n] -= 1;
   }
@@ -254,7 +254,7 @@ int CodeBook::check_light_level( IplImage* hsv )
     ptr = (uchar *)(hsv->imageData + y * hsv->widthStep);
     for( x = 0; x < hsv->width; x++ )
     {
-	  sat_avg += ptr[3*x+1];
+    sat_avg += ptr[3*x+1];
       pixelCount++;
     }
   }
@@ -274,21 +274,21 @@ void CodeBook::write_to_disk()
   for( p = 0; p < numPixels; p++ )
   {
     book = &cbs[p];
-	cvStartWriteStruct( fs, 0, CV_NODE_SEQ );
-	cvWriteInt( fs, 0, book->numEntries );
-	cvWriteInt( fs, 0, book->t );
-	for( i = 0; i < book->numEntries; i++ )
-	{
-	  cvStartWriteStruct( fs, 0, CV_NODE_SEQ );
-	  for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->learnHigh[j] );	
-	  for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->learnLow[j] );	
-	  for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->max[j] );	
-	  for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->min[j] );	
-	  cvWriteInt( fs, 0, book->cb[i]->t_last_update );
-	  cvWriteInt( fs, 0, book->cb[i]->stale );
-	  cvEndWriteStruct( fs );
-	}
-	cvEndWriteStruct( fs );
+  cvStartWriteStruct( fs, 0, CV_NODE_SEQ );
+  cvWriteInt( fs, 0, book->numEntries );
+  cvWriteInt( fs, 0, book->t );
+  for( i = 0; i < book->numEntries; i++ )
+  {
+    cvStartWriteStruct( fs, 0, CV_NODE_SEQ );
+    for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->learnHigh[j] ); 
+    for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->learnLow[j] );  
+    for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->max[j] ); 
+    for( j = 0; j < CHANNELS; j++ ) cvWriteInt( fs, 0, book->cb[i]->min[j] ); 
+    cvWriteInt( fs, 0, book->cb[i]->t_last_update );
+    cvWriteInt( fs, 0, book->cb[i]->stale );
+    cvEndWriteStruct( fs );
+  }
+  cvEndWriteStruct( fs );
   }
   cvReleaseFileStorage( &fs );
   cvClearMemStorage( mem_storage );
@@ -312,27 +312,27 @@ void CodeBook::read_from_disk()
   {
     s2 = ((CvFileNode *)cvGetSeqElem( seq, p ))->data.seq;
     book = &cbs[p];
-	book->numEntries = ((CvFileNode*)cvGetSeqElem( s2, 0 ))->data.i;
-	book->t = ((CvFileNode*)cvGetSeqElem( s2, 1 ))->data.i;
+  book->numEntries = ((CvFileNode*)cvGetSeqElem( s2, 0 ))->data.i;
+  book->t = ((CvFileNode*)cvGetSeqElem( s2, 1 ))->data.i;
 
-//	if( book->numEntries != (s2->total - 2) ) printf( "error: numEntries is %d s2 total is %d\n", book->numEntries, s2->total );
+//  if( book->numEntries != (s2->total - 2) ) printf( "error: numEntries is %d s2 total is %d\n", book->numEntries, s2->total );
     book->cb = new code_element* [book->numEntries];
-	for( i = 0; i < book->numEntries; i++ )
-	{
-	  cb = new code_element;
-	  CvSeq* s3 = ((CvFileNode *)cvGetSeqElem( s2, 2 + i ))->data.seq;
-	  cb->learnHigh[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 0 ) );
-	  cb->learnHigh[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 1 ) );
-	  cb->learnLow[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 2 ) );
-	  cb->learnLow[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 3 ) );
-	  cb->max[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 4 ) );
-	  cb->max[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 5 ) );
-	  cb->min[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 6 ) );
-	  cb->min[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 7 ) );
-	  cb->t_last_update = cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 8 ) );
-	  cb->stale = cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 9 ) );
-	  book->cb[i] = cb;
-	}
+  for( i = 0; i < book->numEntries; i++ )
+  {
+    cb = new code_element;
+    CvSeq* s3 = ((CvFileNode *)cvGetSeqElem( s2, 2 + i ))->data.seq;
+    cb->learnHigh[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 0 ) );
+    cb->learnHigh[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 1 ) );
+    cb->learnLow[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 2 ) );
+    cb->learnLow[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 3 ) );
+    cb->max[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 4 ) );
+    cb->max[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 5 ) );
+    cb->min[0] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 6 ) );
+    cb->min[1] = (uchar)cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 7 ) );
+    cb->t_last_update = cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 8 ) );
+    cb->stale = cvReadInt( (CvFileNode*)cvGetSeqElem( s3, 9 ) );
+    book->cb[i] = cb;
+  }
   }
 
   cvReleaseFileStorage( &fs );
