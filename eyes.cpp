@@ -31,7 +31,7 @@
 
 CRITICAL_SECTION p_CriticalSection;
 
-inline unsigned __int16 round(float x) { return (floor(x + 0.5)); }
+inline unsigned __int16 myRound(float x) { return (floor(x + 0.5)); }
 
 unsigned __int8 motorIDS[] = { 0x01, 0x02 };
 
@@ -114,11 +114,11 @@ Track::Track()
   ftStatus = FT_Open(0, &ftHandle);
   if( ftStatus != FT_OK) {
 //  std::cout << "Opening failed! with error " << ftStatus << endl;
-  ftStatus = FT_Open(0, &ftHandle);
+	ftStatus = FT_Open(0, &ftHandle);
     if( ftStatus != FT_OK) {
-   // std::cout << "Opening failed! with error " << ftStatus << endl;
-    write_errors++;
-    return;
+	 // std::cout << "Opening failed! with error " << ftStatus << endl;
+	  write_errors++;
+	  return;
     }
   }
 
@@ -266,9 +266,9 @@ void Track::processActions()
       return;
     }
 
-    EnterCriticalSection( &m_CriticalSection );
-      newAction = trackAction;
-      trackAction = NOACTION;
+	EnterCriticalSection( &m_CriticalSection );
+    newAction = trackAction;
+	trackAction = NOACTION;
     LeaveCriticalSection( &m_CriticalSection );
 
     if( read_errors > 100 ) {
@@ -305,7 +305,7 @@ int Track::check_is_stopped() {
   for( int i = 0; i < 2; i++ )
   {
     int isMoving = getIsMoving(i);
-  if( isMoving == 0 ) isStopped++; 
+	if( isMoving == 0 ) isStopped++; 
   }
   return (isStopped == 2); 
 }
@@ -315,9 +315,9 @@ void Track::run_farright()
   int i;
   for( i = 0; i < 2; i++ )
   {
-  eye[i].dir = RIGHT;
-  eye[i].speed = 0x200 * 1.0;
-  setSpeed( 0x200, i );
+	eye[i].dir = RIGHT;
+	eye[i].speed = 0x200 * 1.0;
+	setSpeed( 0x200, i );
   }
 
   for( i = 0; i < 2; i++ )
@@ -332,13 +332,13 @@ void Track::run_farleft()
   for( i = 0; i < 2; i++ )
   {
     eye[i].dir = LEFT;
-  eye[i].speed = 0x200 * 1.0;
-  setSpeed( 0x200, i );
+	eye[i].speed = 0x200 * 1.0;
+	setSpeed( 0x200, i );
   }
 
   for( i = 0; i < 2; i++ )
   {
-  setLeftPosition(i);
+	setLeftPosition(i);
   }
 }
 
@@ -348,8 +348,8 @@ void Track::run_zero()
 
   for( i = 0; i < 2; i++ )
   {
-  eye[i].speed = 0x80 * 1.0;
-  setSpeed( 0x80, i );
+	eye[i].speed = 0x80 * 1.0;
+ 	setSpeed( 0x80, i );
   }
   for( i = 0; i < 2; i++ )
   {
@@ -370,7 +370,7 @@ int Track::run_move()
   for( i = 0; i < 2; i++ )
   {
     g_x[i] = eye[i].cur_x;
-  g_dir[i] = new_dir;
+	g_dir[i] = new_dir;
   }
   LeaveCriticalSection( &m_CriticalSection );
 
@@ -389,15 +389,15 @@ int Track::run_move()
 #ifdef DEBUG
     std::cout << i << " cd a is edge " << g_x[i] << endl;
 #endif
-    edge[i] = true;
-    unsigned __int16 edge_pos = 0;
-    if( g_dir[i] == RIGHT ) {
-      edge_pos = eye[i].right_pos;
-    }
-    if( g_dir[i] == LEFT ) {
-      edge_pos = eye[i].left_pos;
-    }
-    if( abs(edge_pos - round(eye[i].x) ) < 200 ) {
+	  edge[i] = true;
+	  unsigned __int16 edge_pos = 0;
+	  if( g_dir[i] == RIGHT ) {
+		  edge_pos = eye[i].right_pos;
+	  }
+	  if( g_dir[i] == LEFT ) {
+		  edge_pos = eye[i].left_pos;
+	  }
+	  if( abs(edge_pos - myRound(eye[i].x) ) < 200 ) {
         change_direction( g_dir[i], i );
       eye[i].dir = g_dir[i];
     }
@@ -424,7 +424,7 @@ int Track::run_move()
   for( i = 0; i < 2; i++ )
   { 
  //   if( getIsMoving(i) ) {
-    prev_dir[i] = eye[i].dir;
+	  prev_dir[i] = eye[i].dir;
  //   } else {
 //    prev_dir[i] = NO_DIR;
 //    }
@@ -501,21 +501,21 @@ int Track::run_move()
   {
     if( change[i] ) {
       setSpeed( round(eye[i].speed), i );
-  }
+	}
   }
   
   for( i = 0; i < 2; i++ )
   {
     if( change[i] ) {
-    overshoot_count[i] = 0;
-    if( next_dir[i] != prev_dir[i] ) {
-      change_direction ( next_dir[i], i );
+	  overshoot_count[i] = 0;
+	  if( next_dir[i] != prev_dir[i] ) {
+		  change_direction ( next_dir[i], i );
 #ifdef DEBUG
-      std::cout << i << " cd c " << next_dir[i] << " " << new_dir << endl;
+		  std::cout << i << " cd c " << next_dir[i] << " " << new_dir << endl;
 #endif
-    }
-    eye[i].dir = next_dir[i];
-  }
+	  }
+	  eye[i].dir = next_dir[i];
+	}
   }
 
   return 0;

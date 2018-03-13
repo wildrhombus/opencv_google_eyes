@@ -5,11 +5,10 @@ This is code to run an interactive sculpture that uses the OpenCV optical flow
 algorithm to follow people and drive two servo motors.  You can see it in action
 here:  https://www.youtube.com/watch?v=NrsMiT3muE8
 
-It was built using Visual Studio on windows.
+It was built using Visual Studio on windows (original VS2008, but more recently VS2015)
 
 To build with the OpenCV libraries, please reference these instructions:
 http://www.learnopencv.com/install-opencv3-on-windows/
-
 
 The motors used were Bioloid server motors that use the FTD2xx drivers.
 To install the ftdi drivers and get the libaries please reference this site:
@@ -19,12 +18,15 @@ I used an external wide angle webcam for the sculpture.  Any external camera tha
 but it's better to use a lower resolution camera to keep the processing requirements manageable.
 
 Relevant files:
+google_two.cpp
+    This is the main application source file.
+
+eyes.cpp
+    The thread for motor control
 
 googlecalibration.txt
   L and R settings to set a zero point for the motors
-  
-google_two.cpp
-    This is the main application source file.
+
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:
