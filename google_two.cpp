@@ -86,8 +86,7 @@ int main( int argc, char** argv )
   signal( SIGINT, ctrlc_handler );
   track_eyes->setAction( ZERO );
 
-  /* Setup the Image Captuer */
-
+  /* Setup the Image Capture */
   IplImage *frame;
   long framecount = 0;
   int gcount = 0;
@@ -141,6 +140,7 @@ int main( int argc, char** argv )
     }
   }
 
+  // Main control
   if( gcount != 0 )
   {
     process_capture->find_eye_position( frame );
@@ -154,21 +154,19 @@ int main( int argc, char** argv )
   {
     if( process_capture->prev_num_contours != 0 )
     {
+      // Check for edge cases and wait a little bit at the edge for better visual effect.
       process_capture->endblob = 100;
       waiting_at_edge = false;
       if( ( process_capture->trackx > 570 ) || track_eyes->check_is_stopped() ) {
-//      std::cout << "wait at far right" << endl;
-      track_eyes->setMove( 0, RIGHT, 640 );
-      waiting_at_edge = true;
+        track_eyes->setMove( 0, RIGHT, 640 );
+        waiting_at_edge = true;
       }
       else if( ( process_capture->trackx < 70 ) || track_eyes->check_is_stopped() ) {
-//      std::cout << "wait at far left" << endl;
-      track_eyes->setMove( 0, LEFT, 0 );
-      waiting_at_edge = true;
+        track_eyes->setMove( 0, LEFT, 0 );
+        waiting_at_edge = true;
       }
       else {
-//        std::cout << "stop in middle" << endl;
-      track_eyes->setAction( STOP );
+        track_eyes->setAction( STOP );
       }
     }
     if( process_capture->endblob > 1 )
@@ -184,52 +182,49 @@ int main( int argc, char** argv )
       process_capture->edge_completed = TRUE;
       waiting_at_edge = false;
     }
-    }
-    if( (framecount <= 100) || (process_capture->groups.size() == 0) )
-      {
-      code_book->update_codebooks( process_capture->hsv );
-    }
+  }
 
-    if( process_capture->contours.size() > 0 ) process_capture->get_points( frame );
+  if( (framecount <= 100) || (process_capture->groups.size() == 0) )
+  {
+    code_book->update_codebooks( process_capture->hsv );
+  }
+
+  if( process_capture->contours.size() > 0 ) process_capture->get_points( frame );
 
 // Every once in a while refresh the background.  This will essentially erase anything that is not moving.
-    if( ((framecount+1) % 100) == 0 )
-    {
-      code_book->clear_all_stale_entries();
-      code_book->update_codebooks( process_capture->hsv );
-    }
+  if( ((framecount+1) % 100) == 0 )
+  {
+    code_book->clear_all_stale_entries();
+    code_book->update_codebooks( process_capture->hsv );
+  }
 
 // Create an initial movement to visually show that the sculpture is on and working.
-    if( framecount == 100 )
-    {
-      track_eyes->setAction( ZERO );
-      Sleep(500);
-      while( !track_eyes->check_is_stopped() );
-//      std::cout << "zero is done\n" << endl;
-      Sleep( 5000 );
-      track_eyes->setAction( FARRIGHT );
-      Sleep(500);
-      while( !track_eyes->check_is_stopped() );
-//      std::cout << "far right done" << endl;
-      Sleep( 5000 );
-      track_eyes->setAction( FARLEFT);
-      Sleep(500);
-      while( !track_eyes->check_is_stopped() );
-//      std::cout << "far left done" << endl;
-      Sleep( 5000 );
-      track_eyes->setAction( ZERO );
-      Sleep(500);
-      while( !track_eyes->check_is_stopped() );
-//      std::cout << "zero done again" << endl;
-      recalibrate = !recalibrate;
-    }
+  if( framecount == 100 )
+  {
+    track_eyes->setAction( ZERO );
+    Sleep(500);
+    while( !track_eyes->check_is_stopped() );
+    Sleep( 5000 );
+    track_eyes->setAction( FARRIGHT );
+    Sleep(500);
+    while( !track_eyes->check_is_stopped() );
+    Sleep( 5000 );
+    track_eyes->setAction( FARLEFT);
+    Sleep(500);
+    while( !track_eyes->check_is_stopped() );
+    Sleep( 5000 );
+    track_eyes->setAction( ZERO );
+    Sleep(500);
+    while( !track_eyes->check_is_stopped() );
+    recalibrate = !recalibrate;
+  }
 
 #ifdef SHOWIMAGE
-    cvShowImage( "google", frame );
-    uchar bkey = cvWaitKey(7);
-    if( bkey == 27 ) break;
+  cvShowImage( "google", frame );
+  uchar bkey = cvWaitKey(7);
+  if( bkey == 27 ) break;
 #endif
-  }
+}
 
 
 // End the threads when program receives signal to stop.
